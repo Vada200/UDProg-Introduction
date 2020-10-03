@@ -22,7 +22,7 @@ int main ()
 			cout << "The larger value: " << a << endl;
 		}
 		int abso = abs(a-b);
-		if (abso = 1)
+		if (abso <= 0.01)
 			cout << "The numbers are almost equal";
 	}
 
