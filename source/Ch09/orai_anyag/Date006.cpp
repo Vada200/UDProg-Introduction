@@ -1,6 +1,36 @@
 #include "std_lib_facilities.h"
 //A február és a 30-31 napos hónapok miatt problémás, de szemhunyós
 
+namespace UDChrono {
+
+class Year {
+	
+	static constexpr int min = 1800;
+	static constexpr int max = 2077;
+	
+public:
+	class Invalid{};
+	Year(int x) : y(x) { if (x < min || x > max) throw Invalid{}; } 
+	int year() {return y;} //a priv. y-t adja vissza
+	void increment() {y++; if (y > max) throw Invalid{};}
+	
+private:
+	int y;
+
+};
+
+Year operator++(Year& year)
+{
+	year.increment();
+	
+	return 0;
+}
+
+ostream& operator<<(ostream& os, Year year)
+{
+	return os << year.year();
+}
+
 //enum
 const vector<string> months =
 {
@@ -25,7 +55,7 @@ enum class Month
 //operator overload
 Month operator++(Month& m)
 {
-	m = (m == Month::dec) ? Month::jan : Month((int(m)+1)); //? : if
+	m = (m == Month::dec) ? Month::jan : Month(int(m)+1); //? : if
 	//hamis: léptetés in kasztolással
 	return m;
 }
@@ -39,47 +69,30 @@ ostream& operator<<(ostream& os, Month m) // << működését írjuk át (os - o
 
 class Date { //private érték
 //private: //alapért
-	int year;
+	Year year;
 	Month month;
 	int day;
 	
 public:	
-	class Invalid {}; //elkapandó a catch-ben
+	class Invalid {}; //elkapandó a catch-ben	
+	Date(): year(Year{2001}), month(Month::jan), day(1) {} //alapértelmezett default érték
+	Date(Year y, Month m, int d): year(y), month(m), day(d)  { if (!is_valid()) throw Invalid{};} // : lokális tagok
+	
 	bool is_valid();
-	Date(int y, Month m, int d): year(y), month(m), day(d)  { if (!is_valid()) throw Invalid{};} // : lokális tagok
 	void add_day (int n); //fv
 	//Getter
-	int get_year() {return year;}
-	Month get_month() {return month;}
-	int get_day() {return day;}
+	Year get_year() const {return year;}
+	Month get_month() const {return month;}
+	int get_day() const {return day;}
 };
 
 bool Date::is_valid()
 {
-	if (year < 0 || day < 1 || day > 31) return false;
+	if (day < 1 || day > 31) return false;
 	
 	return true;
 }
 
-/*
-Date::Date(int y, int m, int d) //konstruktor megadása itt történik
-{
-	if (y > 0)
-		year = y;
-	else
-		error ("Invalid year");
-	
-	if (m <= 12 && m > 0)
-		month = m;
-	else
-		error ("Invalid month");
-	
-	if (d > 0 && d <=31)
-		day = d;
-	else
-		error ("Invalid day");	
-}
-*/
 void Date::add_day(int n) //Date - add_day fv-e
 {
 	day += n;
@@ -89,27 +102,40 @@ void Date::add_day(int n) //Date - add_day fv-e
 		day -= 31; //31-ből kivonni mert kövi hó
 		if (month == Month::jan)
 		{
-			year++;
+			++year;
 			
 		}
 	}
-
 }
+} //UDChrono vége
 
 int main () 
 {
 try {
-	Date today {2020, Month::aug, 31};
-
-	//cout << "Date: "<< today.year << '.' << today.month << '.' << today.day << '.' << endl;
-	 today.add_day(1);
-	 //today.day++; //error mert 32
+	UDChrono::Date today {UDChrono::Year{2020}, UDChrono::Month::aug, 13};
+	
+	today.add_day(1);
+	
 	cout << "Date: "<< today.get_year() << ". " << today.get_month() << ' ' << today.get_day() << '.' << endl;
+	
+	UDChrono::Date tomorrow {today};
+	
+	cout << "Date: "<< tomorrow.get_year() << ". " << tomorrow.get_month() << ' ' << tomorrow.get_day() << '.' << endl;
+	
+	
+	vector<UDChrono::Date> dates(10);
+	
+	cout << "Vector\n";
+	for (const auto& date : dates)
+		cout << "Date: "<< date.get_year() << ". " << date.get_month() << ' ' << date.get_day() << '.' << endl;
 	
 	
 	return 0;
-} catch (Date::Invalid) {
+} catch (UDChrono::Date::Invalid) {
 	cout << "Invalid date\n" << endl;
+	return 1;
+} catch (UDChrono::Year::Invalid) {
+	cout << "Invalid year\n" << endl;
 	return 1;
 } catch (exception& e) {
 	cout << e.what() << endl;
