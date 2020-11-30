@@ -2,56 +2,56 @@
 
 void print_array1(ostream& os, int* a) {
 	for ( int i = 0; i < 10 ; i++)
-	cout << a[i];
-	cout << endl;	
+	os << a[i];
+	os << endl;	
 }
 
 void print_array2(ostream& os, int* a) {
 	for (int i = 0; i < 10; i++) { 
 		a[i] = 100 + i;
-		cout << a[i] << ' ';
+		os << a[i] << ' ';
 	}
-	cout << endl;
+	os << endl;
 }
 
 void print_array3(ostream& os, int* a) {
 	for (int i = 0; i < 11; i++) { 
 		a[i] = 100 + i;
-		cout << a[i] << ' ';
+		os << a[i] << ' ';
 	}
-	cout << endl;
+	os << endl;
 }
 
 void print_array4(ostream& os, int* a, int n) {
 	for (int i = 0; i < n; i++) {
 		a[i] = 100 + i;
-		cout << a[i] << ' ';
+		os << a[i] << ' ';
 	}
-	cout << endl;
+	os << endl;
 }
  //Vectors//
 void print_vector (ostream& os, vector<int> a) {
 	for (int i = 0; i < 10; i++) { 
 		a.push_back(100+i);
 	}
-	for ( int g : a) {cout << g << " ";}
-	cout << endl;
+	for ( int g : a) {os << g << " ";}
+	os << endl;
 }
 
 void print_vector2 (ostream& os, vector<int> a) {
 	for (int i = 0; i < 11; i++) { 
 		a.push_back(100+i);
 	}
-	for ( int g : a) {cout << g << " ";}
-	cout << endl;
+	for ( int g : a) {os << g << " ";}
+	os << endl;
 }
 
 void print_vector3 (ostream& os, vector<int> a, int n) {
 	for (int i = 0; i < n; i++) { 
 		a.push_back(100+i);
 	}
-	for ( int g : a) {cout << g << " ";}
-	cout << endl;
+	for ( int g : a) {os << g << " ";}
+	os << endl;
 }
 
 
